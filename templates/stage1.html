@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stage 1</title>
+</head>
+<body>
+<form method="POST" action="/edit/{{ page.id }}/stage1">
+    <table>
+        <tr>
+            <td rowspan="0"><img src="{{  url_for('static', filename='images/%s/%s.jpg'%(page.dirpath, page.id)) }}" /></td>
+        </tr>
+        <tr>
+            <td><img src="{{  url_for('static', filename='images/%s/%s.crop.png'%(page.dirpath, page.id)) }}" /></td>
+        </tr>
+    {% for field in form %}
+        {% if field.id != "csrf_token" %}
+        <tr>
+            <td>{{ field.label }}</td>
+            <td>{{ field() }}</td>
+        </tr>
+        {% endif %}
+    {% endfor %}
+    </table>
+</form>
+</body>
+</html>

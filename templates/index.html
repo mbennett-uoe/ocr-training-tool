@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OCR Training Tool</title>
+</head>
+<body>
+{% if current_user.is_authenticated %}
+  Hi {{ current_user.username }}!
+{% else %}
+  Unauthed!
+{% endif %}
+</body>
+</html>
