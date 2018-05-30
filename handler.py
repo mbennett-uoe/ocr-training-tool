@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = r'sqlite:///d:\tmp.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = r'sqlite:///./ocr.db'
 app.secret_key = b'changeme'
 
 bcrypt = Bcrypt(app)
@@ -51,9 +51,9 @@ class User(db.Model):
 
 class Page(db.Model):
     id = db.Column(db.String(16), primary_key=True)
-    shelfmark = db.Column(db.String(128), unique=True, nullable=False)
-    document = db.Column(db.String(8), unique=True, nullable=False)
-    sequence = db.Column(db.String(8), unique=True, nullable=False)
+    shelfmark = db.Column(db.String(128), nullable=False)
+    document = db.Column(db.String(8), nullable=False)
+    sequence = db.Column(db.String(8), nullable=False)
     page_type = db.Column(db.String(16))
     handwriting = db.Column(db.Boolean)
     bad_crop = db.Column(db.Boolean)
