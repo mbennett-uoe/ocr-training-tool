@@ -6,21 +6,22 @@
 </head>
 <body>
 <form method="POST" action="/edit/{{ page.id }}/stage2">
-    <table>
+    <table border="1">
         <tr>
-            <td rowspan="0"><img src="{{  url_for('static', filename='images/%s/%s.jpg'%(page.dirpath, page.id)) }}" /></td>
+            <td rowspan="0"><img src="{{  url_for('static', filename='images/%s/%s.crop.png'%(page.dirpath, page.id)) }}" /></td>
         </tr>
         <tr>
-            <td><img src="{{  url_for('static', filename='images/%s/%s.crop.png'%(page.dirpath, page.id)) }}" /></td>
+            <th>Line text</th>
+            <th>Marginalia</th>
+            <th>Line missing</th>
         </tr>
-    {% for field in form %}
-        {% if field.id not in ["csrf_token", "save", "finalise"] %}
+        {% for number in range(page.lines|count) %}
         <tr>
-            <td>{{ field.label }}</td>
-            <td>{{ field() }}</td>
+            <td>{{ form['line-%s'%number](size=80) }}</td>
+            <td align="center">{{ form['line-%s-m'%number]() }}</td>
+            <td align="center">{{ form['line-%s-n'%number]() }}</td>
         </tr>
-        {% endif %}
-    {% endfor %}
+        {% endfor %}
         <tr>
             <td>{{ form.save }}</td>
             <td>{{ form.finalise }}</td>

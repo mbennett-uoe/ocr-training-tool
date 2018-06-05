@@ -6,12 +6,16 @@
 </head>
 <body>
 <form method="POST" action="/edit/{{ page.id }}/stage1">
-    <table>
+    <table border="1">
+        <tr>
+            <th>Original Image</th>
+            <th colspan="2">Cropped Image</th>
+        </tr>
         <tr>
             <td rowspan="0"><img src="{{  url_for('static', filename='images/%s/%s.jpg'%(page.dirpath, page.id)) }}" /></td>
         </tr>
         <tr>
-            <td><img src="{{  url_for('static', filename='images/%s/%s.crop.png'%(page.dirpath, page.id)) }}" /></td>
+            <td colspan="2" align="center"><img src="{{  url_for('static', filename='images/%s/%s.crop.png'%(page.dirpath, page.id)) }}" /></td>
         </tr>
     {% for field in form %}
         {% if field.id != "csrf_token" %}
