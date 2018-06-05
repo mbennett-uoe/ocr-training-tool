@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View</title>
+</head>
+<body>
+<form method="POST" action="/edit/{{ page.id }}/stage3">
+    <table border="1">
+        <tr>
+            <td rowspan="0"><img src="{{  url_for('static', filename='images/%s/%s.jpg'%(page.dirpath, page.id)) }}" /></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                {% for line in page.lines %}
+                {{ line.corrected }}<br />
+                {% endfor %}
+            </td>
+        </tr>
+        <tr>
+            <td>{{ form.stage1 }}</td>
+            <td>{{ form.stage2 }}</td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

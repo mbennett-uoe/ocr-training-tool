@@ -126,12 +126,12 @@ def logout():
     return "Logged out"
 
 
-@app.route("/view/<int:page_id>")
+@app.route("/view/<page_id>")
 @login_required
 def view(page_id):
-    record = None
-    return "View %s" %page_id
-    #return render_template("view.html", record=record)
+    page = Page.query.get_or_404(page_id)
+    form = Stage3Form(obj=page)
+    return render_template("view.html", page=page, form=form)
 
 
 @app.route("/edit/<page_id>")
