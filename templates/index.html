@@ -7,12 +7,16 @@
 <body>
 <h1>OCR Training Tool</h1>
 {% if current_user.is_authenticated %}
-  Logged in as: {{ current_user.username }} (<a href="/logout">Log Out</a>)<br />
+  Logged in as: {{ current_user.username }} (<a href="/logout">Log Out</a>)<br /><br />
 {% endif %}
+
 {% if current[0] %}
-Currently working on page {{ current[0] }} stage {{ current[1] }}
+Last activity:  Page {{ current[0] }} / Stage {{ current[1] }}
+<form method="GET" action="/edit/{{ current[0] }}/stage{{ current[1] }}">
+    <input type="submit" name="return" value="Return to this page" id="return">
+</form>
 {% endif %}
-<form method="POST" action="/getpage">
+<form method="GET" action="/getpage">
     <input type="submit" name="getpage" value="Start on a new page" id="getpage">
 </form>
 
