@@ -5,6 +5,7 @@
     <title>Stage 2</title>
 </head>
 <body>
+{% if other_users %}<h2>This page is currently being edited by {{ other_users.username }}, your changes may be overwritten</h2>{% endif %}
 <form method="POST" action="/edit/{{ page.id }}/stage2">
     <table border="1">
         <tr>

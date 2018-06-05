@@ -165,8 +165,9 @@ def edit(page_id, stage=None):
     if stage is None:
         return redirect(url_for('edit', page_id=page_id, stage=1))
     if request.method == "GET":
+            other_users = User.query.filter_by(current_page=page_id).filter(User.id != current_user.id).first()
             form = forms[stage](request.form, obj=page)
-            return render_template('stage%s.html'%stage, page=page, form=form)
+            return render_template('stage%s.html'%stage, page=page, form=form, other_users=other_users)
     elif request.method == "POST":
         form = forms[stage](request.form)
         if stage == 1:
