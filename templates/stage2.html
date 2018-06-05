@@ -5,6 +5,10 @@
     <title>Stage 2</title>
 </head>
 <body>
+<h1>OCR Training Tool</h1>
+{% if current_user.is_authenticated %}
+  Logged in as: {{ current_user.username }} (<a href="/logout">Log Out</a>)<br />
+{% endif %}
 {% if other_users %}<h2>This page is currently being edited by {{ other_users.username }}, your changes may be overwritten</h2>{% endif %}
 <form method="POST" action="/edit/{{ page.id }}/stage2">
     <table border="1">

@@ -5,6 +5,10 @@
     <title>View</title>
 </head>
 <body>
+<h1>OCR Training Tool</h1>
+{% if current_user.is_authenticated %}
+  Logged in as: {{ current_user.username }} (<a href="/logout">Log Out</a>)<br /><br />
+{% endif %}
 <form method="POST" action="/edit/{{ page.id }}/stage3">
     <table border="1">
         <tr>
