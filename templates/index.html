@@ -5,10 +5,19 @@
     <title>OCR Training Tool</title>
 </head>
 <body>
+<h1>OCR Training Tool</h1>
 {% if current_user.is_authenticated %}
-  Hi {{ current_user.username }}!
-{% else %}
-  Unauthed!
+  Logged in as: {{ current_user.username }} (<a href="/logout">Log Out</a>)<br />
 {% endif %}
+{% if current[0] %}
+Currently working on page {{ current[0] }} stage {{ current[1] }}
+{% endif %}
+<form method="POST" action="/getpage">
+    <input type="submit" name="getpage" value="Start on a new page" id="getpage">
+</form>
+
+{% for stat in stats %}
+{{ stat }}: {{ stats[stat] }}<br />
+{% endfor %}
 </body>
 </html>

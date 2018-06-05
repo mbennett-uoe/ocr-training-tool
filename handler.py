@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, url_for, redirect, flash, abo
 from forms import LoginForm, is_safe_url, Stage1Form, stage2form_factory, Stage3Form
 from flask_login import login_user, LoginManager, login_required, current_user, logout_user
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
@@ -26,6 +27,8 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(256), unique=False, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
+    current_page = db.Column(db.String(16))
+    current_stage = db.Column(db.Integer)
 
     @property
     def is_active(self):
@@ -47,6 +50,16 @@ class User(db.Model):
 
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password, password)
+
+    def get_current(self):
+        if self.current_page:
+            return self.current_page, self.current_stage
+        else:
+            return None
+
+    def set_current(self, page, stage=None):
+        self.current_page = page
+        self.current_stage = stage
 
 
 class Page(db.Model):
@@ -94,7 +107,12 @@ class Line(db.Model):
 @app.route('/')
 @login_required
 def index():
-    return render_template("index.html")
+    stats = {"Pages": Page.query.count(),
+             "Lines": Line.query.count(),
+             "Finished": Page.query.filter_by(is_finished=True).count(),
+             }
+    current = current_user.get_current()
+    return render_template("index.html", stats=stats, current=current)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -142,10 +160,10 @@ def edit(page_id, stage=None):
     forms = {1: Stage1Form,
              2: stage2form_factory(page),
              3: Stage3Form}
-
+    current_user.set_current(page_id, stage)
+    db.session.commit()
     if stage is None:
         return redirect(url_for('edit', page_id=page_id, stage=1))
-
     if request.method == "GET":
             form = forms[stage](request.form, obj=page)
             return render_template('stage%s.html'%stage, page=page, form=form)
@@ -168,6 +186,7 @@ def edit(page_id, stage=None):
         elif stage == 3:
             if form.finalise.data:
                 page.is_finished = True
+                current_user.set_current(None, None)
                 db.session.commit()
                 flash("Record saved")
                 return redirect(url_for('index'))
@@ -176,6 +195,15 @@ def edit(page_id, stage=None):
             if form.stage2.data:
                 return redirect(url_for('edit', page_id=page_id, stage=2))
 
+
+@app.route("/getpage", methods=['GET', 'POST'])
+@login_required
+def get_page():
+    page = Page.query.filter_by(is_finished=False).order_by(func.random()).first()
+    if page:
+        return redirect(url_for('edit', page_id=page.id, stage=1))
+    else:
+        return redirect(url_for('index', message="No Pages"))
 
 
 
